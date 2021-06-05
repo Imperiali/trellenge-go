@@ -1,19 +1,14 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/Pelegrinetti/trellenge-go/internal/config"
+	"github.com/Pelegrinetti/trellenge-go/pkg/http"
 	"github.com/gofiber/fiber/v2"
 )
 
 func main() {
 	config := config.New()
-	app := fiber.New()
+	s := http.New(fiber.Config{})
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello World")
-	})
-
-	app.Listen(fmt.Sprintf(":%d", config.Port))
+	s.Run(config.Port)
 }

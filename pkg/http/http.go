@@ -3,6 +3,7 @@ package http
 import (
 	"fmt"
 
+	"github.com/Pelegrinetti/trellenge-go/pkg/helloworld"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -19,7 +20,9 @@ func (s server) Run(port int) {
 	app := fiber.New(s.config)
 
 	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello World")
+		msg := helloworld.GetMessage()
+
+		return c.SendString(msg)
 	})
 
 	app.Listen(fmt.Sprintf(":%d", port))

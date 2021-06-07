@@ -12,12 +12,11 @@ type Server interface {
 }
 
 type server struct {
-	port   int
-	config fiber.Config
+	port int
 }
 
 func (s server) Run(port int) {
-	app := fiber.New(s.config)
+	app := fiber.New()
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		msg := helloworld.GetMessage()
@@ -28,8 +27,6 @@ func (s server) Run(port int) {
 	app.Listen(fmt.Sprintf(":%d", port))
 }
 
-func New(config fiber.Config) Server {
-	return server{
-		config: config,
-	}
+func New() Server {
+	return server{}
 }

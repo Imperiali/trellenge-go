@@ -15,7 +15,7 @@ type server struct {
 	port int
 }
 
-func (s server) Run(port int) {
+func (s *server) Run(port int) {
 	app := fiber.New()
 
 	app.Get("/", func(c *fiber.Ctx) error {
@@ -28,5 +28,5 @@ func (s server) Run(port int) {
 }
 
 func New() Server {
-	return server{}
+	return &server{}
 }

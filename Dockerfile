@@ -1,6 +1,6 @@
 FROM golang:1.16-buster as base
   WORKDIR /app
-  ENV PORT=8080 \
+  ENV PORT=80 \
     APP_NAME=trellenge-go
 
 FROM base as moduler

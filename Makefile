@@ -17,7 +17,7 @@ endif
 
 start-dev: check-development-image
 	@echo "Starting challenge as development mode"
-	@docker run --name $(CONTAINER_NAME) --env-file .env -v $(PWD):/app -p $(PORT):8080 --rm $(CONTAINER_NAME):development
+	@docker run --name $(CONTAINER_NAME) --env-file .env -v $(PWD):/app -p $(PORT):80 --rm $(CONTAINER_NAME):development
 
 start-prod: build-production-image
 	@echo "Starting challenge as production mode"

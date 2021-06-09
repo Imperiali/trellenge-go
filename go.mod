@@ -3,6 +3,7 @@ module github.com/Pelegrinetti/trellenge-go
 go 1.16
 
 require (
+	github.com/go-redis/redis/v8 v8.10.0 // indirect
 	github.com/gofiber/fiber/v2 v2.9.0
 	github.com/kr/text v0.2.0 // indirect
 	github.com/spf13/viper v1.7.1

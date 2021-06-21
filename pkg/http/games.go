@@ -2,8 +2,10 @@ package http
 
 import (
 	"fmt"
+
 	"github.com/Pelegrinetti/trellenge-go/pkg/container"
 	"github.com/Pelegrinetti/trellenge-go/pkg/games"
+	"github.com/Pelegrinetti/trellenge-go/pkg/messenger"
 	"github.com/go-redis/redis/v8"
 	"github.com/gofiber/fiber/v2"
 )
@@ -56,5 +58,39 @@ func CreateGame(ctn *container.Container) fiber.Handler {
 		}
 
 		return c.Status(201).JSON(game)
+	}
+}
+
+func DeleteGame(ctn *container.Container) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		title := c.Query("title")
+
+		game := games.Game{
+			Title: title,
+		}
+
+		msgr := messenger.New()
+
+		producer, producerError := msgr.CreateProducer("nsq.hud:4150")
+
+		if producerError != nil {
+			fmt.Println("Error deleting game: Producer not created")
+			return producerError
+		}
+
+		if err := producer.Publish("deleted game", []byte(game.UserIds.String())); err != nil {
+			fmt.Println("Error deleting game: NSQ message not published")
+			return err
+		}
+
+		producer.Stop()
+
+		_, cacheError := game.DeleteFromCache(ctn.Cache)
+		if cacheError != redis.Nil && cacheError != nil {
+			fmt.Println("Error deleting game from cache.", cacheError.Error())
+			return c.SendStatus(500)
+		}
+
+		return c.SendStatus(200)
 	}
 }

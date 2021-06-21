@@ -10,6 +10,7 @@ import (
 type Cache interface {
 	Get(key string) (interface{}, error)
 	Set(key string, data interface{}, ttl time.Duration) (string, error)
+	Delete(key string) (interface{}, error)
 }
 
 type cache struct {
@@ -30,6 +31,15 @@ func (c *cache) Set(key string, data interface{}, ttl time.Duration) (string, er
 	defer cancel()
 
 	result, err := c.client.Set(ctx, key, data, ttl).Result()
+
+	return result, err
+}
+
+func (c *cache) Delete(key string) (interface{}, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancel()
+
+	result, err := c.client.Del(ctx, key).Result()
 
 	return result, err
 }

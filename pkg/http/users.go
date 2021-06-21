@@ -2,12 +2,13 @@ package http
 
 import (
 	"fmt"
+	"strconv"
+
 	"github.com/Pelegrinetti/trellenge-go/pkg/container"
 	"github.com/Pelegrinetti/trellenge-go/pkg/games"
 	"github.com/Pelegrinetti/trellenge-go/pkg/users"
 	"github.com/go-redis/redis/v8"
 	"github.com/gofiber/fiber/v2"
-	"strconv"
 )
 
 func GetUser(ctn *container.Container) fiber.Handler {
@@ -74,7 +75,7 @@ func CreateUser(ctn *container.Container) fiber.Handler {
 			}
 
 			if !g.ContainsUserId(user.GetCacheKey()) {
-				g.UserId = append(g.UserId, user.GetCacheKey())
+				g.UserIds = append(g.UserIds, user.GetCacheKey())
 			}
 
 			user.Games[i] = g

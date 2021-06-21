@@ -3,10 +3,11 @@ package users
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/Pelegrinetti/trellenge-go/pkg/cache"
-	"github.com/Pelegrinetti/trellenge-go/pkg/games"
 	"reflect"
 	"time"
+
+	"github.com/Pelegrinetti/trellenge-go/pkg/cache"
+	"github.com/Pelegrinetti/trellenge-go/pkg/games"
 )
 
 type User struct {
@@ -43,4 +44,16 @@ func (u *User) SetUserInCache(c cache.Cache) (string, error) {
 	}
 
 	return c.Set(cacheKey, encodedUser, time.Minute*5)
+}
+
+func (u *User) RemoveGame(title string) {
+	userGames := []games.Game{}
+
+	for _, game := range u.Games {
+		if game.Title != title {
+			userGames = append(userGames, game)
+		}
+	}
+
+	u.Games = userGames
 }

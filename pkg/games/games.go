@@ -3,15 +3,23 @@ package games
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/Pelegrinetti/trellenge-go/pkg/cache"
 	"reflect"
+	"strings"
 	"time"
+
+	"github.com/Pelegrinetti/trellenge-go/pkg/cache"
 )
 
+type UserIds []string
+
+func (u UserIds) String() string {
+	return strings.Join(u, ",")
+}
+
 type Game struct {
-	Title    string   `json:"title"`
-	Category string   `json:"category"`
-	UserId   []string `json:"user_id"`
+	Title    string  `json:"title"`
+	Category string  `json:"category"`
+	UserIds  UserIds `json:"user_id"`
 }
 
 func (g *Game) Unmarshal(data interface{}) error {
@@ -32,6 +40,12 @@ func (g *Game) GetFromCache(c cache.Cache) (interface{}, error) {
 	return c.Get(cacheKey)
 }
 
+func (g *Game) DeleteFromCache(c cache.Cache) (interface{}, error) {
+	cacheKey := g.getCacheKey()
+
+	return c.Delete(cacheKey)
+}
+
 func (g *Game) Create(c cache.Cache) error {
 	cacheKey := g.getCacheKey()
 
@@ -46,7 +60,7 @@ func (g *Game) Create(c cache.Cache) error {
 }
 
 func (g *Game) ContainsUserId(id string) bool {
-	for _, userId := range g.UserId {
+	for _, userId := range g.UserIds {
 		if userId == id {
 			return true
 		}
@@ -54,10 +68,10 @@ func (g *Game) ContainsUserId(id string) bool {
 	return false
 }
 
-func New(title, category string, userId []string) Game {
+func New(title, category string, userIds UserIds) Game {
 	return Game{
 		Title:    title,
 		Category: category,
-		UserId:   userId,
+		UserIds:  userIds,
 	}
 }

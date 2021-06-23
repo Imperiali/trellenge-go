@@ -2,6 +2,7 @@ package http
 
 import (
 	"fmt"
+
 	"github.com/Pelegrinetti/trellenge-go/pkg/container"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -31,6 +32,8 @@ func (s *server) Run(port int) {
 	app.Get("/games", GetGame(s.container))
 
 	app.Post("/games", CreateGame(s.container))
+
+	app.Delete("/games", DeleteGame(s.container))
 
 	if err := app.Listen(fmt.Sprintf(":%d", port)); err != nil {
 		panic(err)

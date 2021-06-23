@@ -69,6 +69,10 @@ func DeleteGame(ctn *container.Container) fiber.Handler {
 			Title: title,
 		}
 
+		data, _ := game.GetFromCache(ctn.Cache)
+
+		game.Unmarshal(data)
+
 		msgr := messenger.New()
 
 		producer, producerError := msgr.CreateProducer("nsq.hud:4150")
@@ -78,7 +82,7 @@ func DeleteGame(ctn *container.Container) fiber.Handler {
 			return producerError
 		}
 
-		if err := producer.Publish("deleted game", []byte(game.UserIds.String())); err != nil {
+		if err := producer.Publish("deletedGames", game.Marshal()); err != nil {
 			fmt.Println("Error deleting game: NSQ message not published")
 			return err
 		}

@@ -22,6 +22,12 @@ type Game struct {
 	UserIds  UserIds `json:"user_id"`
 }
 
+func (g *Game) Marshal() []byte {
+	result, _ := json.Marshal(g)
+
+	return result
+}
+
 func (g *Game) Unmarshal(data interface{}) error {
 	if reflect.TypeOf(data).String() == "[]uint8" {
 		return json.Unmarshal(data.([]byte), g)
